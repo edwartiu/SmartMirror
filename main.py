@@ -1,7 +1,24 @@
-print('hello, world')
+from tkinter import *
+from datetime import datetime
 
-print('testing push comit')
-print('second test')
+window = Tk()
+window.attributes('-fullscreen', True)
 
-print('sup')
-print('ho')
+# Code for widgets will go under here
+
+# Display Time
+def update_time():
+    now = datetime.now()
+    # Change %#I to %-I when using Unix system 
+    formatted_time = now.strftime("%#I:%M")
+    time.config(text = formatted_time)
+    window.after(500, update_time)
+
+
+
+time = Label(window, text= '')
+time.pack()
+
+
+update_time()
+window.mainloop()
