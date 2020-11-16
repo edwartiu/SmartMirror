@@ -6,9 +6,11 @@ from __future__ import print_function
 import datetime
 import pickle
 import os.path
+import pytz
 from googleapiclient.discovery import build
 from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
+
 
 # If modifying these scopes, delete the file token.pickle.
 SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
@@ -37,23 +39,34 @@ service = build('calendar', 'v3', credentials=creds)
 
 # Call the Calendar API
 now = datetime.datetime.utcnow().isoformat() + 'Z' # 'Z' indicates UTC time
+end_date = datetime.datetime.utcnow().astimezone(pytz.timezone("America/Los_Angeles")).replace(hour=23, minute=59, microsecond=0).isoformat()
 print('Getting the upcoming 10 events')
-events_result = service.events().list(calendarId='primary', timeMin=now, maxResults=5, singleEvents=True, orderBy='startTime').execute()
+events_result = service.events().list(calendarId='primary', timeMin=now, timeMax=end_date, maxResults=5, singleEvents=True, orderBy='startTime').execute()
 events = events_result.get('items', [])
 
 if not events:
     print('No upcoming events found.')
 for event in events:
-    information = {}
-    information['title'] = event['summary']
+    event_info = {}
+
+    #Retrieve title
+    event_info['title'] = event['summary']
+
+    #Retrieve and format start time
     startTime = event['start'].get('dateTime')
     startTime = startTime[:19].replace('T', ' ')
     date_time_obj = datetime.datetime.strptime(startTime, '%Y-%m-%d %H:%M:%S')
-    start = date_time_obj.strftime("%#I:%M")
+    event_info['start'] = date_time_obj.strftime("%#I:%M")
 
-    print(start)
-    print(" ")
+    #Retrieve and format end time
+    endTime = event['end'].get('dateTime')
+    endTime = endTime[:19].replace('T', ' ')
+    date_time_obj = datetime.datetime.strptime(endTime, '%Y-%m-%d %H:%M:%S')
+    event_info['end'] = date_time_obj.strftime("%#I:%M")
 
+    print(event_info['title'], event_info['start'], event_info['end'])
+
+    
 
 
 """
