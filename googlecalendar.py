@@ -56,20 +56,16 @@ for event in events:
     startTime = event['start'].get('dateTime')
     startTime = startTime[:19].replace('T', ' ')
     date_time_obj = datetime.datetime.strptime(startTime, '%Y-%m-%d %H:%M:%S')
-    event_info['start'] = date_time_obj.strftime("%#I:%M")
+    try: 
+        event_info['start'] = date_time_obj.strftime("%#I:%M")
+    except:
+        event_info['start'] = date_time_obj.strftime("%-I:%M")
 
     #Retrieve and format end time
     endTime = event['end'].get('dateTime')
     endTime = endTime[:19].replace('T', ' ')
     date_time_obj = datetime.datetime.strptime(endTime, '%Y-%m-%d %H:%M:%S')
-    event_info['end'] = date_time_obj.strftime("%#I:%M")
-
-    print(event_info['title'], event_info['start'], event_info['end'])
-
-    
-
-
-"""
-start = event['start'].get('dateTime', event['start'].get('date'))
-print(start, event['summary'])
-"""
+    try:
+        event_info['end'] = date_time_obj.strftime("%#I:%M")
+    except:
+        event_info['end'] = date_time_obj.strftime("%-I:%M")
