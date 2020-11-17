@@ -17,7 +17,7 @@ SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
 
 
 # Call the Calendar API
-def get_user_events():
+def get_todays_events():
     creds = None
 
     # Checks if user credentials are already saved in pkl file. If so assigns thme to creds
@@ -44,7 +44,7 @@ def get_user_events():
 
     now = utc_dt.astimezone(PST).isoformat()
     end_date = utc_dt.astimezone(PST).replace(hour=23, minute=59).isoformat()
-    print('Getting the upcoming 10 events')
+    print('Getting today\'s events')
     events_result = service.events().list(calendarId='primary', timeMin=now, timeMax=end_date, maxResults=5, singleEvents=True, orderBy='startTime').execute()
     events = events_result.get('items', [])
     user_events = []
@@ -77,3 +77,5 @@ def get_user_events():
         user_events.append(event_info)
     
     return user_events
+
+print(get_todays_events())
