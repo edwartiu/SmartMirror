@@ -1,3 +1,4 @@
+from googlecalendar import *
 from tkinter import *
 from datetime import datetime
 
@@ -29,6 +30,8 @@ def update_date():
     date.config(text=formatted_date)
     window.after(500, update_date)
 
+events = get_user_events()
+print(events)
 
 
 
