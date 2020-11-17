@@ -44,7 +44,6 @@ def get_todays_events():
 
     now = utc_dt.astimezone(PST).isoformat()
     end_date = utc_dt.astimezone(PST).replace(hour=23, minute=59).isoformat()
-    print('Getting today\'s events')
     events_result = service.events().list(calendarId='primary', timeMin=now, timeMax=end_date, maxResults=5, singleEvents=True, orderBy='startTime').execute()
     events = events_result.get('items', [])
     user_events = []
@@ -62,18 +61,18 @@ def get_todays_events():
         startTime = startTime[:19].replace('T', ' ')
         date_time_obj = datetime.datetime.strptime(startTime, '%Y-%m-%d %H:%M:%S')
         try: 
-            event_info['start'] = date_time_obj.strftime("%#I:%M")
+            event_info['start'] = date_time_obj.strftime("%#I:%M %p")
         except:
-            event_info['start'] = date_time_obj.strftime("%-I:%M")
+            event_info['start'] = date_time_obj.strftime("%-I:%M %p")
 
         #Retrieve and format end time
         endTime = event['end'].get('dateTime')
         endTime = endTime[:19].replace('T', ' ')
         date_time_obj = datetime.datetime.strptime(endTime, '%Y-%m-%d %H:%M:%S')
         try:
-            event_info['end'] = date_time_obj.strftime("%#I:%M")
+            event_info['end'] = date_time_obj.strftime("%#I:%M %p")
         except:
-            event_info['end'] = date_time_obj.strftime("%-I:%M")
+            event_info['end'] = date_time_obj.strftime("%-I:%M %p")
         user_events.append(event_info)
     
     return user_events

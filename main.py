@@ -11,6 +11,23 @@ window.configure(background='black')
 
 # Code for widgets will go under here
 
+time = Label(window, text= '', bg='black', fg='white', font=("Courier", 44))
+time.pack(side=TOP, anchor=W)
+
+date = Label(window, text= '', bg='black', fg='white', font=("Courier", 30))
+date.pack(side= TOP, anchor=W)
+
+todays_events = Frame(window, bg='black')
+todays_events.pack(side=BOTTOM, anchor=W)
+
+
+todays_events_label = Label(window, text='Today\'s Events', bg='black', fg='white', font=("Courier", 30))
+todays_events_label.pack(side=BOTTOM, anchor=W)
+
+
+
+
+
 # Display Time
 def update_time():
     now = datetime.now()
@@ -41,33 +58,24 @@ def update_todays_events():
         todays_event_title = events[0]['title']
         todays_event_start = events[0]['start']
         todays_event_end = events[0]['end']
-        title = Label(window, text=todays_event_title,  bg='black', fg='white', font=("Courier", 44))
-        title.grid(column=0, row=4)
-        event_time = Label(window, text=todays_event_start+' - '+todays_event_end, bg='black', fg='white', font=("Courier", 33))
-        event_time.grid(column=0, row=5)
+        title = Label(todays_events, text=todays_event_title,  bg='black', fg='white', font=("Courier", 44))
+        title.grid(column=0, row=4, sticky=W)
+        event_time = Label(todays_events, text=todays_event_start+' - '+todays_event_end, bg='black', fg='white', font=("Courier", 33))
+        event_time.grid(column=0, row=5, sticky=W)
+
     else:
         counter = 0
         for event in events:
             todays_event_title = event['title']
             todays_event_start = event['start']
             todays_event_end = event['end']
-            title = Label(window, text=todays_event_title,  bg='black', fg='white', font=("Courier", 44))
-            title.grid(column=0, row = 4+(2*counter))
-            event_time = Label(window, text=todays_event_start+' - '+todays_event_end, bg='black', fg='white', font=("Courier", 33))
-            event_time.grid(column=0, row=5+(2*counter))
+            title = Label(todays_events, text=todays_event_title,  bg='black', fg='white', font=("Courier", 44))
+            title.grid(column=0, row = 0+(2*counter), sticky=W)
+            event_time = Label(todays_events, text=todays_event_start+' - '+todays_event_end, bg='black', fg='white', font=("Courier", 33))
+            event_time.grid(column=0, row=1+(2*counter), sticky=W)
             counter += 1
     window.after(500, update_todays_events)
 
-
-
-time = Label(window, text= '', bg='black', fg='white', font=("Courier", 44))
-time.grid(column=0, row=1)
-
-date = Label(window, text= '', bg='black', fg='white', font=("Courier", 30))
-date.grid(column=0, row=2)
-
-todays_events_label = Label(window, text='Today\'s events', bg='black', fg='white', font=("Courier", 30))
-todays_events_label.grid(column= 0, row= 3)
 
 
 
@@ -82,5 +90,3 @@ update_time()
 update_date()
 update_todays_events()
 window.mainloop()
-
-print(get_todays_events())
