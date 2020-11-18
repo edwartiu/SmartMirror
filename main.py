@@ -1,24 +1,69 @@
 from googlecalendar import *
+from weather import *
 from tkinter import *
 from datetime import datetime
+from PIL import Image, ImageTk
+import requests
+from io import BytesIO
+import urllib.request
+
+
+
+URL = 'http://openweathermap.org/img/wn/10d@2x.png'
+
+with urllib.request.urlopen(URL) as url:
+    with open('temp.png', 'wb') as f:
+        f.write(url.read())
+
+
+image = Image.open('temp.png')
+
+
 
 window = Tk()
+
+img = ImageTk.PhotoImage(image)
+
 try:
     window.attributes('-fullscreen', True)
 except:
     window.attributes('-zoomed', True)
 window.configure(background='black')
 
-# Code for widgets will go under here
+# Frames
+header = Frame(window, bg='black')
+header.pack(side=TOP, fill=X)
 
-time = Label(window, text= '', bg='black', fg='white', font=("Courier", 44))
-time.pack(side=TOP, anchor=W)
+time_date = Frame(header, bg='black')
+time_date.pack(side=LEFT)
 
-date = Label(window, text= '', bg='black', fg='white', font=("Courier", 30))
-date.pack(side= TOP, anchor=W)
+weather = Frame(header, bg='black')
+weather.pack(side=RIGHT)
 
 todays_events = Frame(window, bg='black')
 todays_events.pack(side=BOTTOM, anchor=W)
+
+# Header widgets
+
+
+# Code for widgets will go under here
+
+time = Label(time_date, text= '', bg='black', fg='white', font=("Courier", 44))
+time.grid(column=0, row=0, sticky=W)
+
+date = Label(time_date, text= '', bg='black', fg='white', font=("Courier", 30))
+date.grid(column=0,row=1, sticky=W)
+
+weather_icon = Label(weather, image=img, bg='black')
+weather_icon.grid(column=0, row = 0, rowspan=2)
+
+temp = Label(weather, text='', bg='black', fg='white', font=("Courier", 30))
+temp.grid(column=1,row=0)
+
+city = Label(weather, text='', bg='black', fg='white', font=("Courier", 30))
+city.grid(column=1,row=1)
+
+
 
 
 todays_events_label = Label(window, text='Today\'s Events', bg='black', fg='white', font=("Courier", 30))
@@ -52,8 +97,8 @@ def update_todays_events():
     events = get_todays_events()
     items = len(events)
     if items == 0:
-        todays_event = Label(window, text = '', bg='black', fg='white', font=("Courier", 44))
-        todays_event.grid(column=0, row=4)
+        event = Label(todays_events, text = '', bg='black', fg='white', font=("Courier", 44))
+        event.grid(column=0, row=4)
     elif items == 1:
         todays_event_title = events[0]['title']
         todays_event_start = events[0]['start']
@@ -74,7 +119,19 @@ def update_todays_events():
             event_time = Label(todays_events, text=todays_event_start+' - '+todays_event_end, bg='black', fg='white', font=("Courier", 33))
             event_time.grid(column=0, row=1+(2*counter), sticky=W)
             counter += 1
-    window.after(500, update_todays_events)
+    window.after(900000, update_todays_events)
+
+
+def update_weather():
+    weather = get_weather()
+    updated_icon = weather['icon']
+    updated_temp = weather['temp']
+    updated_city = weather['city']
+
+    #weather_icon.configure(image='weather_icons/'+updated_icon)
+    temp.configure(text=updated_temp)
+    city.configure(text=updated_city)
+    window.after(180000, update_weather)
 
 
 
@@ -89,4 +146,5 @@ window.bind("<Escape>", exit)
 update_time()
 update_date()
 update_todays_events()
+update_weather()
 window.mainloop()

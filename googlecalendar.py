@@ -12,12 +12,10 @@ from google_auth_oauthlib.flow import InstalledAppFlow
 from google.auth.transport.requests import Request
 
 
-SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
-
-
 
 # Call the Calendar API
 def get_todays_events():
+    SCOPES = ['https://www.googleapis.com/auth/calendar.readonly']
     creds = None
 
     # Checks if user credentials are already saved in pkl file. If so assigns thme to creds
@@ -77,4 +75,3 @@ def get_todays_events():
     
     return user_events
 
-print(get_todays_events())
