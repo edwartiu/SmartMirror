@@ -58,10 +58,10 @@ weather_icon = Label(weather, image=img, bg='black')
 weather_icon.grid(column=0, row = 0, rowspan=2)
 
 temp = Label(weather, text='', bg='black', fg='white', font=("Courier", 30))
-temp.grid(column=1,row=0)
+temp.grid(column=1,row=0, sticky=SW)
 
 city = Label(weather, text='', bg='black', fg='white', font=("Courier", 30))
-city.grid(column=1,row=1)
+city.grid(column=1,row=1, sticky=NW)
 
 
 
@@ -119,7 +119,7 @@ def update_todays_events():
             event_time = Label(todays_events, text=todays_event_start+' - '+todays_event_end, bg='black', fg='white', font=("Courier", 33))
             event_time.grid(column=0, row=1+(2*counter), sticky=W)
             counter += 1
-    window.after(900000, update_todays_events)
+    window.after(500, update_todays_events)
 
 
 def update_weather():
@@ -129,9 +129,9 @@ def update_weather():
     updated_city = weather['city']
 
     #weather_icon.configure(image='weather_icons/'+updated_icon)
-    temp.configure(text=updated_temp)
+    temp.configure(text=str(updated_temp) + u'\N{DEGREE SIGN}' )
     city.configure(text=updated_city)
-    window.after(180000, update_weather)
+    window.after(500, update_weather)
 
 
 

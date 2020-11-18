@@ -14,7 +14,7 @@ def get_weather():
     response = response.json()
 
     weather = {}
-    weather['temp'] = response["main"].get('temp')
+    weather['temp'] = round(response["main"].get('temp'))
     weather['description'] = response['weather'][0].get('description')
     weather['icon'] = response['weather'][0].get('icon')
     weather['city'] = response.get('name')
