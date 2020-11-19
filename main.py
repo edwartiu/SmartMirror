@@ -77,9 +77,9 @@ todays_events_label.pack(side=BOTTOM, anchor=W)
 def update_time():
     now = datetime.now()
     try: 
-        formatted_time = now.strftime("%#I:%M")
+        formatted_time = now.strftime("%#I:%M %p")
     except:
-        formatted_time = now.strftime("%-I:%M")
+        formatted_time = now.strftime("%-I:%M %p")
     time.config(text=formatted_time)
     window.after(500, update_time)
 
